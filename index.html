@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IceMortis Shop — Магазин Brawl Stars</title>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gem: #00d4ff;
+    --gem2: #7b2fff;
+    --gold: #FFD700;
+    --bg: #0a0a1a;
+    --card: #12122a;
+    --card2: #1a1a3a;
+    --border: rgba(123,47,255,0.25);
+    --text: #e8e8ff;
+    --sub: #8888bb;
+    --danger: #ff4466;
+    --green: #00e676;
+    --bp: #ff8c00;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  html { scroll-behavior: smooth; }
+ 
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+ 
+  /* BG */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 10%, rgba(123,47,255,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 80%, rgba(0,212,255,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(123,47,255,0.07) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+ 
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,26,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex; align-items: center; gap: 12px;
+    height: 62px;
+  }
+  .nav-logo {
+    font-family: 'Russo One', sans-serif;
+    font-size: 1.3rem;
+    background: linear-gradient(90deg, var(--gem2), var(--gem));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-right: auto;
+  }
+  .nav-logo span { color: var(--gold); -webkit-text-fill-color: var(--gold); }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    background: none; border: none; color: var(--sub);
+    font-family: 'Nunito', sans-serif; font-size: .9rem; font-weight: 700;
+    cursor: pointer; padding: 8px 14px; border-radius: 10px;
+    transition: color .2s, background .2s;
+  }
+  .nav-link:hover, .nav-link.active { color: var(--text); background: rgba(123,47,255,0.18); }
+  .nav-link.cabinet-btn {
+    background: linear-gradient(135deg, var(--gem2), #5500cc);
+    color: #fff; -webkit-text-fill-color: #fff;
+    padding: 8px 18px;
+  }
+  .nav-link.cabinet-btn:hover { opacity: .85; }
+ 
+  /* HERO */
+  .hero {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 80px 24px 60px;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(123,47,255,0.22);
+    border: 1px solid rgba(123,47,255,0.45);
+    color: var(--gem);
+    font-size: .78rem; font-weight: 800; letter-spacing: .12em;
+    text-transform: uppercase; border-radius: 999px;
+    padding: 5px 16px; margin-bottom: 18px;
+    animation: pulse-border 2.5s infinite;
+  }
+  @keyframes pulse-border {
+    0%,100% { box-shadow: 0 0 0 0 rgba(0,212,255,.2); }
+    50% { box-shadow: 0 0 0 8px rgba(0,212,255,0); }
+  }
+  .hero h1 {
+    font-family: 'Russo One', sans-serif;
+    font-size: clamp(2.2rem,6vw,4rem);
+    line-height: 1.1;
+    background: linear-gradient(135deg, #fff 30%, var(--gem2), var(--gem));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    color: var(--sub); font-size: 1.05rem; max-width: 480px; margin: 0 auto 32px;
+  }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Russo One', sans-serif; font-size: 1.6rem;
+    background: linear-gradient(135deg, var(--gem), var(--gem2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .stat-label { font-size: .78rem; color: var(--sub); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+ 
+  /* SECTION */
+  section { position: relative; z-index: 1; padding: 0 24px 60px; max-width: 1100px; margin: 0 auto; }
+  .section-title {
+    font-family: 'Russo One', sans-serif;
+    font-size: 1.7rem;
+    margin-bottom: 28px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1; height: 2px;
+    background: linear-gradient(90deg, var(--gem2), transparent);
+    border-radius: 2px;
+  }
+ 
+  /* GEMS GRID */
+  .gems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .gem-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px 18px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform .22s, border-color .22s, box-shadow .22s;
+    position: relative; overflow: hidden;
+  }
+  .gem-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(123,47,255,0.07), rgba(0,212,255,0.05));
+    opacity: 0; transition: opacity .22s;
+  }
+  .gem-card:hover { transform: translateY(-6px); border-color: var(--gem2); box-shadow: 0 12px 40px rgba(123,47,255,0.25); }
+  .gem-card:hover::before { opacity: 1; }
+  .gem-card.popular {
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(255,215,0,0.15);
+  }
+  .popular-badge {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--gold); color: #1a1a00;
+    font-size: .65rem; font-weight: 900; text-transform: uppercase; letter-spacing: .1em;
+    padding: 3px 10px; border-radius: 999px;
+  }
+  .gem-icon { font-size: 2.4rem; margin-bottom: 10px; display: block; filter: drop-shadow(0 0 10px rgba(0,212,255,0.5)); }
+  .gem-amount {
+    font-family: 'Russo One', sans-serif; font-size: 1.6rem;
+    background: linear-gradient(135deg, var(--gem), var(--gem2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 4px;
+  }
+  .gem-label { font-size: .8rem; color: var(--sub); font-weight: 700; margin-bottom: 14px; }
+  .gem-price {
+    font-size: 1.3rem; font-weight: 900; color: #fff;
+    background: linear-gradient(135deg, var(--gem2), #5500cc);
+    border-radius: 12px; padding: 8px 0;
+    display: block; transition: opacity .2s;
+  }
+  .gem-card:hover .gem-price { opacity: .9; }
+ 
+  /* BP SECTION */
+  .bp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .bp-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 22px;
+    cursor: pointer;
+    transition: transform .22s, border-color .22s, box-shadow .22s;
+    position: relative; overflow: hidden;
+  }
+  .bp-card:hover { transform: translateY(-6px); border-color: var(--bp); box-shadow: 0 12px 40px rgba(255,140,0,0.2); }
+  .bp-icon { font-size: 2.2rem; margin-bottom: 10px; }
+  .bp-name { font-family: 'Russo One', sans-serif; font-size: 1.15rem; margin-bottom: 4px; color: #fff; }
+  .bp-desc { font-size: .83rem; color: var(--sub); font-weight: 600; margin-bottom: 18px; line-height: 1.5; }
+  .bp-price {
+    font-size: 1.2rem; font-weight: 900; color: #fff;
+    background: linear-gradient(135deg, #ff8c00, #cc5500);
+    border-radius: 12px; padding: 8px 18px; display: inline-block;
+  }
+ 
+  /* HOW TO ORDER */
+  .steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .step-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px 18px;
+  }
+  .step-num {
+    font-family: 'Russo One', sans-serif; font-size: 2rem;
+    background: linear-gradient(135deg, var(--gem2), var(--gem));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 8px;
+  }
+  .step-title { font-weight: 800; margin-bottom: 6px; }
+  .step-text { font-size: .85rem; color: var(--sub); line-height: 1.6; }
+ 
+  /* REVIEWS */
+  .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .review-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 20px;
+    animation: fadeInUp .5s both;
+  }
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  .review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .review-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gem2), var(--gem));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 1rem; flex-shrink: 0;
+  }
+  .review-name { font-weight: 800; font-size: .95rem; }
+  .review-date { font-size: .75rem; color: var(--sub); }
+  .review-stars { color: var(--gold); font-size: .9rem; margin-bottom: 8px; }
+  .review-text { font-size: .87rem; color: var(--sub); line-height: 1.6; }
+  .review-product { margin-top: 10px; display: inline-block; background: rgba(123,47,255,0.18); color: var(--gem); font-size: .75rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+ 
+  /* REVIEW FORM */
+  .review-form {
+    background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 28px 24px;
+    max-width: 560px;
+  }
+  .form-title { font-family: 'Russo One', sans-serif; font-size: 1.15rem; margin-bottom: 20px; }
+  .form-group { margin-bottom: 16px; }
+  label { display: block; font-size: .82rem; font-weight: 800; color: var(--sub); margin-bottom: 7px; text-transform: uppercase; letter-spacing: .07em; }
+  input, textarea, select {
+    width: 100%; background: var(--card2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 16px;
+    color: var(--text); font-family: 'Nunito', sans-serif; font-size: .95rem; font-weight: 600;
+    outline: none; transition: border-color .2s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--gem2); }
+  textarea { resize: vertical; min-height: 90px; }
+  select option { background: #1a1a3a; }
+  .stars-input { display: flex; gap: 6px; }
+  .star-btn {
+    background: none; border: none; font-size: 1.6rem; cursor: pointer;
+    color: #333; transition: color .15s, transform .15s;
+  }
+  .star-btn.active { color: var(--gold); }
+  .star-btn:hover { transform: scale(1.2); color: var(--gold); }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 28px; border-radius: 14px; border: none; cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 900;
+    transition: opacity .2s, transform .15s;
+  }
+  .btn:hover { opacity: .87; transform: translateY(-2px); }
+  .btn-primary { background: linear-gradient(135deg, var(--gem2), #5500cc); color: #fff; }
+  .btn-gem { background: linear-gradient(135deg, #00b8d4, var(--gem2)); color: #fff; }
+  .btn-green { background: linear-gradient(135deg, #00c853, #007e33); color: #fff; }
+ 
+  /* SUCCESS TOAST */
+  #toast {
+    position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+    background: linear-gradient(135deg, #1a2a1a, #12221a);
+    border: 1px solid var(--green); border-radius: 16px;
+    padding: 16px 24px; color: var(--green);
+    font-weight: 800; font-size: .95rem;
+    box-shadow: 0 8px 30px rgba(0,230,118,.2);
+    transform: translateY(80px); opacity: 0;
+    transition: all .4s cubic-bezier(.34,1.56,.64,1);
+    max-width: 320px;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+ 
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity .25s;
+    padding: 20px;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--card); border: 1px solid var(--border); border-radius: 24px;
+    padding: 32px 28px; max-width: 420px; width: 100%;
+    transform: scale(.93); transition: transform .25s;
+    position: relative;
+  }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal-close {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; color: var(--sub); font-size: 1.3rem; cursor: pointer;
+    transition: color .2s;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal-title { font-family: 'Russo One', sans-serif; font-size: 1.25rem; margin-bottom: 6px; }
+  .modal-sub { color: var(--sub); font-size: .88rem; margin-bottom: 22px; }
+  .modal-price { font-size: 1.8rem; font-weight: 900; color: var(--gem); margin-bottom: 22px; }
+ 
+  /* CABINET */
+  #cabinet { display: none; }
+  #cabinet.visible { display: block; }
+  .cabinet-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .tab-btn {
+    background: var(--card); border: 1px solid var(--border); color: var(--sub);
+    font-family: 'Nunito', sans-serif; font-size: .88rem; font-weight: 800;
+    padding: 9px 18px; border-radius: 12px; cursor: pointer; transition: all .2s;
+  }
+  .tab-btn.active { background: linear-gradient(135deg, var(--gem2), #5500cc); border-color: var(--gem2); color: #fff; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .order-list { display: flex; flex-direction: column; gap: 12px; }
+  .order-item {
+    background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .order-icon { font-size: 1.8rem; }
+  .order-info { flex: 1; }
+  .order-name { font-weight: 800; font-size: .95rem; }
+  .order-date { font-size: .78rem; color: var(--sub); }
+  .order-status {
+    font-size: .75rem; font-weight: 800; padding: 4px 12px; border-radius: 999px;
+  }
+  .status-done { background: rgba(0,230,118,.12); color: var(--green); }
+  .status-pending { background: rgba(255,212,0,.12); color: var(--gold); }
+  .profile-card {
+    background: var(--card2); border: 1px solid var(--border); border-radius: 18px; padding: 24px;
+    display: flex; align-items: center; gap: 18px; margin-bottom: 24px;
+  }
+  .profile-avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gem2), var(--gem));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Russo One', sans-serif; font-size: 1.6rem;
+  }
+  .profile-name { font-family: 'Russo One', sans-serif; font-size: 1.2rem; }
+  .profile-email { color: var(--sub); font-size: .85rem; }
+  .profile-tag { background: rgba(0,212,255,.12); color: var(--gem); font-size: .75rem; font-weight: 800; padding: 3px 10px; border-radius: 999px; margin-top: 6px; display: inline-block; }
+ 
+  /* AUTH */
+  .auth-form {
+    max-width: 400px; margin: 0 auto;
+    background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 36px 28px;
+    text-align: center;
+  }
+  .auth-title { font-family: 'Russo One', sans-serif; font-size: 1.4rem; margin-bottom: 8px; }
+  .auth-sub { color: var(--sub); font-size: .88rem; margin-bottom: 28px; }
+  .auth-switch { margin-top: 16px; font-size: .87rem; color: var(--sub); }
+  .auth-switch a { color: var(--gem); cursor: pointer; font-weight: 700; }
+ 
+  /* FOOTER */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border);
+    text-align: center; padding: 28px 24px;
+    color: var(--sub); font-size: .82rem;
+  }
+ 
+  @media(max-width:600px) {
+    .hero { padding: 50px 16px 40px; }
+    .nav-links { gap: 0; }
+    .nav-link { padding: 7px 9px; font-size: .8rem; }
+  }
+</style>
+</head>
+<body>
+ 
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">IceMortis<span> Shop</span></div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="scrollToSection('shop')">Магазин</button>
+    <button class="nav-link" onclick="scrollToSection('how')">Как купить</button>
+    <button class="nav-link" onclick="scrollToSection('reviews')">Отзывы</button>
+    <button class="nav-link cabinet-btn" onclick="toggleCabinet()">👤 Кабинет</button>
+    <button class="nav-link" onclick="openAdminLogin()" style="background:rgba(255,68,102,.15);color:#ff4466;border:1px solid rgba(255,68,102,.3);padding:8px 14px">🔐 Админ</button>
+  </div>
+</nav>
+ 
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⚡ Быстрая доставка • Безопасно • Выгодно</div>
+  <h1>IceMortis<br>Shop</h1>
+  <p>Пополняй запасы гемов и Боевых Пропусков по лучшим ценам. Доставка от 5 минут.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">12 400+</div><div class="stat-label">Заказов</div></div>
+    <div class="stat"><div class="stat-num">4.9 ★</div><div class="stat-label">Рейтинг</div></div>
+    <div class="stat"><div class="stat-num">5 мин</div><div class="stat-label">Доставка</div></div>
+  </div>
+  <button class="btn btn-gem" onclick="scrollToSection('shop')">💎 Купить гемы</button>
+</div>
+ 
+<!-- SHOP -->
+<section id="shop">
+  <div class="section-title">💎 Гемы</div>
+  <div class="gems-grid">
+    <div class="gem-card" onclick="openOrder('30 гемов','199')">
+      <span class="gem-icon">💎</span>
+      <div class="gem-amount">30</div>
+      <div class="gem-label">Гемов</div>
+      <span class="gem-price">199 ₽</span>
+    </div>
+    <div class="gem-card" onclick="openOrder('80 гемов','459')">
+      <span class="gem-icon">💎</span>
+      <div class="gem-amount">80</div>
+      <div class="gem-label">Гемов</div>
+      <span class="gem-price">459 ₽</span>
+    </div>
+    <div class="gem-card popular" onclick="openOrder('170 гемов','899')">
+      <div class="popular-badge">Хит</div>
+      <span class="gem-icon">💎</span>
+      <div class="gem-amount">170</div>
+      <div class="gem-label">Гемов</div>
+      <span class="gem-price">899 ₽</span>
+    </div>
+    <div class="gem-card" onclick="openOrder('360 гемов','1849')">
+      <span class="gem-icon">💎</span>
+      <div class="gem-amount">360</div>
+      <div class="gem-label">Гемов</div>
+      <span class="gem-price">1 849 ₽</span>
+    </div>
+    <div class="gem-card popular" onclick="openOrder('950 гемов','4599')">
+      <div class="popular-badge">Выгодно</div>
+      <span class="gem-icon">💎</span>
+      <div class="gem-amount">950</div>
+      <div class="gem-label">Гемов</div>
+      <span class="gem-price">4 599 ₽</span>
+    </div>
+    <div class="gem-card" onclick="openOrder('2000 гемов','9349')">
+      <span class="gem-icon">💎</span>
+      <div class="gem-amount">2000</div>
+      <div class="gem-label">Гемов</div>
+      <span class="gem-price">9 349 ₽</span>
+    </div>
+  </div>
+ 
+  <div class="section-title" style="margin-top:40px">🏆 Боевой Пропуск</div>
+  <div class="bp-grid">
+    <div class="bp-card" onclick="openOrder('Боевой Пропуск+','1299')">
+      <div class="bp-icon">🥇</div>
+      <div class="bp-name">БП+</div>
+      <div class="bp-desc">Максимальный Боевой Пропуск с дополнительными наградами и эксклюзивным скином</div>
+      <span class="bp-price">1 299 ₽</span>
+    </div>
+    <div class="bp-card" onclick="openOrder('Боевой Пропуск','899')">
+      <div class="bp-icon">🥈</div>
+      <div class="bp-name">БП</div>
+      <div class="bp-desc">Стандартный Боевой Пропуск. Открывает все уровни наград текущего сезона</div>
+      <span class="bp-price">899 ₽</span>
+    </div>
+    <div class="bp-card" onclick="openOrder('Улучшение БП → БП+','499')">
+      <div class="bp-icon">⬆️</div>
+      <div class="bp-name">Улучшение БП → БП+</div>
+      <div class="bp-desc">Уже есть БП? Улучши его до БП+ и получи все дополнительные бонусы</div>
+      <span class="bp-price">499 ₽</span>
+    </div>
+  </div>
+</section>
+ 
+<!-- HOW TO ORDER -->
+<section id="how">
+  <div class="section-title">⚡ Как купить</div>
+  <div class="steps">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-title">Выбери товар</div>
+      <div class="step-text">Нажми на нужный пакет гемов или Боевой Пропуск в каталоге</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-title">Заполни данные</div>
+      <div class="step-text">Укажи свой Brawl Stars ID (тег игрока) и выбери способ оплаты</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-title">Оплати</div>
+      <div class="step-text">Переведи оплату удобным способом — СБП, карта, ЮМани</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">04</div>
+      <div class="step-title">Получи гемы</div>
+      <div class="step-text">Товар придёт в течение 5–30 минут. Мы уведомим тебя в чате</div>
+    </div>
+  </div>
+</section>
+ 
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="section-title">⭐ Отзывы покупателей</div>
+  <div class="reviews-grid" id="reviews-list"></div>
+  <div class="review-form" id="review-form-wrap">
+    <div class="form-title">✍️ Оставить отзыв</div>
+    <div class="form-group">
+      <label>Ваше имя</label>
+      <input type="text" id="rv-name" placeholder="Brawler_2025">
+    </div>
+    <div class="form-group">
+      <label>Товар</label>
+      <select id="rv-product">
+        <option>30 гемов — 199₽</option>
+        <option>80 гемов — 459₽</option>
+        <option>170 гемов — 899₽</option>
+        <option>360 гемов — 1849₽</option>
+        <option>950 гемов — 4599₽</option>
+        <option>2000 гемов — 9349₽</option>
+        <option>БП+ — 1299₽</option>
+        <option>БП — 899₽</option>
+        <option>Улучшение БП → БП+ — 499₽</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Оценка</label>
+      <div class="stars-input" id="stars-input">
+        <button class="star-btn" onclick="setStar(1)">★</button>
+        <button class="star-btn" onclick="setStar(2)">★</button>
+        <button class="star-btn" onclick="setStar(3)">★</button>
+        <button class="star-btn" onclick="setStar(4)">★</button>
+        <button class="star-btn" onclick="setStar(5)">★</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Отзыв</label>
+      <textarea id="rv-text" placeholder="Поделитесь впечатлением..."></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="submitReview()">Отправить отзыв ✉️</button>
+  </div>
+</section>
+ 
+<!-- CABINET -->
+<section id="cabinet">
+  <div class="section-title">👤 Личный кабинет</div>
+ 
+  <!-- AUTH FORMS -->
+  <div id="auth-block">
+    <div class="auth-form" id="login-form">
+      <div class="auth-title">Войти</div>
+      <div class="auth-sub">Войди в аккаунт, чтобы управлять заказами</div>
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com"></div>
+      <div class="form-group"><label>Пароль</label><input type="password" id="login-pass" placeholder="••••••••"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Войти</button>
+      <div class="auth-switch">Нет аккаунта? <a onclick="showReg()">Зарегистрироваться</a></div>
+    </div>
+    <div class="auth-form" id="reg-form" style="display:none">
+      <div class="auth-title">Регистрация</div>
+      <div class="auth-sub">Создай аккаунт — это быстро!</div>
+      <div class="form-group"><label>Имя</label><input type="text" id="reg-name" placeholder="Brawler_2025"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="you@example.com"></div>
+      <div class="form-group"><label>Brawl Stars тег</label><input type="text" id="reg-tag" placeholder="#XXXXXXXX"></div>
+      <div class="form-group"><label>Пароль</label><input type="password" id="reg-pass" placeholder="••••••••"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doRegister()">Создать аккаунт</button>
+      <div class="auth-switch">Уже есть аккаунт? <a onclick="showLogin()">Войти</a></div>
+    </div>
+  </div>
+ 
+  <!-- PROFILE (after login) -->
+  <div id="profile-block" style="display:none">
+    <div class="profile-card">
+      <div class="profile-avatar" id="profile-av">B</div>
+      <div>
+        <div class="profile-name" id="profile-name-text"></div>
+        <div class="profile-email" id="profile-email-text"></div>
+        <div class="profile-tag" id="profile-tag-text"></div>
+      </div>
+      <button class="btn" style="margin-left:auto;background:rgba(255,68,102,.15);color:var(--danger);border:1px solid rgba(255,68,102,.3)" onclick="doLogout()">Выйти</button>
+    </div>
+    <div class="cabinet-tabs">
+      <button class="tab-btn active" onclick="switchTab('orders')">📦 Мои заказы</button>
+      <button class="tab-btn" onclick="switchTab('settings')">⚙️ Настройки</button>
+    </div>
+    <div class="tab-content active" id="tab-orders">
+      <div class="order-list" id="order-list"></div>
+    </div>
+    <div class="tab-content" id="tab-settings">
+      <div class="review-form">
+        <div class="form-title">Данные профиля</div>
+        <div class="form-group"><label>Имя</label><input type="text" id="set-name"></div>
+        <div class="form-group"><label>Brawl Stars тег</label><input type="text" id="set-tag"></div>
+        <button class="btn btn-primary" onclick="saveSettings()">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ADMIN PANEL -->
+<div id="admin-panel" style="display:none">
+  <div style="background:linear-gradient(135deg,rgba(255,60,60,0.08),rgba(255,60,60,0.03));border-top:2px solid rgba(255,60,60,0.35);border-bottom:2px solid rgba(255,60,60,0.15);padding:10px 24px;display:flex;align-items:center;gap:10px;position:sticky;top:62px;z-index:90;backdrop-filter:blur(12px)">
+    <span style="font-size:.75rem;font-weight:900;color:#ff4466;text-transform:uppercase;letter-spacing:.12em">🔐 Режим администратора</span>
+    <span style="margin-left:auto;font-size:.78rem;color:var(--sub)">IceMortis Shop · Owner</span>
+    <button onclick="adminLogout()" style="background:rgba(255,68,102,.15);border:1px solid rgba(255,68,102,.35);color:#ff4466;font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:800;padding:5px 14px;border-radius:8px;cursor:pointer">Выйти</button>
+  </div>
+ 
+  <section style="max-width:1100px;margin:0 auto;padding:36px 24px 80px;position:relative;z-index:1">
+    <div style="font-family:'Russo One',sans-serif;font-size:1.8rem;margin-bottom:6px">⚙️ Панель управления</div>
+    <div style="color:var(--sub);font-size:.9rem;margin-bottom:32px">Управляй заказами, отзывами и статистикой магазина</div>
+ 
+    <div id="admin-stats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:36px"></div>
+ 
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+      <button class="tab-btn active" id="atab-orders" onclick="adminTab('orders',this)">📦 Все заказы</button>
+      <button class="tab-btn" id="atab-reviews" onclick="adminTab('reviews',this)">⭐ Отзывы</button>
+      <button class="tab-btn" id="atab-users" onclick="adminTab('users',this)">👥 Пользователи</button>
+      <button class="tab-btn" id="atab-settings" onclick="adminTab('settings',this)">🔧 Настройки</button>
+    </div>
+ 
+    <div id="admin-tab-orders" class="admin-tab-content">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+        <input id="admin-search" oninput="adminRenderOrders()" placeholder="🔍 Поиск по тегу, email, ID..." style="flex:1;min-width:200px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 16px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:600;outline:none">
+        <select id="admin-filter" onchange="adminRenderOrders()" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;outline:none">
+          <option value="all">Все статусы</option>
+          <option value="pending">⏳ В обработке</option>
+          <option value="paid">💳 Оплачен</option>
+          <option value="done">✅ Выдан</option>
+          <option value="cancelled">❌ Отменён</option>
+        </select>
+      </div>
+      <div id="admin-orders-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+ 
+    <div id="admin-tab-reviews" class="admin-tab-content" style="display:none">
+      <div id="admin-reviews-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+ 
+    <div id="admin-tab-users" class="admin-tab-content" style="display:none">
+      <div id="admin-users-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+ 
+    <div id="admin-tab-settings" class="admin-tab-content" style="display:none">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
+        <div class="review-form">
+          <div class="form-title">🔑 Смена пароля администратора</div>
+          <div class="form-group"><label>Новый логин</label><input type="text" id="admin-new-login" placeholder="Новый логин"></div>
+          <div class="form-group"><label>Новый пароль</label><input type="password" id="admin-new-pass" placeholder="Новый пароль"></div>
+          <button class="btn btn-primary" onclick="adminChangePass()">Сохранить</button>
+        </div>
+        <div class="review-form">
+          <div class="form-title">🗑️ Управление данными</div>
+          <div style="color:var(--sub);font-size:.85rem;margin-bottom:16px;line-height:1.6">Очистка удалит все данные без возможности восстановления</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <button class="btn" style="background:rgba(255,68,102,.12);color:#ff4466;border:1px solid rgba(255,68,102,.3)" onclick="adminClearOrders()">Очистить заказы</button>
+            <button class="btn" style="background:rgba(255,68,102,.12);color:#ff4466;border:1px solid rgba(255,68,102,.3)" onclick="adminClearReviews()">Очистить отзывы</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+ 
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="admin-login-modal">
+  <div class="modal" style="max-width:360px">
+    <button class="modal-close" onclick="closeModal('admin-login-modal')">✕</button>
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:2rem;margin-bottom:8px">🔐</div>
+      <div class="modal-title">Панель администратора</div>
+      <div style="color:var(--sub);font-size:.83rem">IceMortis Shop · только для владельца</div>
+    </div>
+    <div class="form-group"><label>Логин</label><input type="text" id="admin-login-input" placeholder="admin"></div>
+    <div class="form-group"><label>Пароль</label><input type="password" id="admin-pass-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()"></div>
+    <div id="admin-login-err" style="color:#ff4466;font-size:.82rem;font-weight:700;margin-bottom:12px;display:none">❌ Неверные данные</div>
+    <button class="btn btn-primary" style="width:100%" onclick="adminLogin()">Войти в панель</button>
+  </div>
+</div>
+ 
+<style>
+  .admin-tab-content { animation: fadeInUp .3s both; }
+  .admin-order-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px 18px;
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    transition: border-color .2s;
+  }
+  .admin-order-card:hover { border-color: rgba(123,47,255,0.5); }
+  .astat-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px;
+    text-align: center;
+  }
+  .astat-num { font-family:"Russo One",sans-serif; font-size:1.6rem; background:linear-gradient(135deg,var(--gem2),var(--gem)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .astat-label { font-size:.75rem; color:var(--sub); font-weight:800; text-transform:uppercase; letter-spacing:.08em; margin-top:2px; }
+  .status-select {
+    background: var(--card2); border: 1px solid var(--border); border-radius: 10px;
+    padding: 6px 12px; color: var(--text); font-family:"Nunito",sans-serif;
+    font-size:.82rem; font-weight:800; outline:none; cursor:pointer;
+  }
+  .status-paid { background:rgba(0,212,255,.12); color:var(--gem); }
+  .status-cancelled { background:rgba(255,68,102,.12); color:#ff4466; }
+  #admin-panel { animation: fadeInUp .4s both; }
+</style>
+ 
+<footer id="main-footer" ondblclick="openAdminLogin()" style="cursor:default">
+  &copy; 2025 IceMortis Shop — не аффилированы с Supercell. Все права защищены.
+  <span style="color:rgba(255,255,255,0.05);font-size:.6rem;user-select:none"> ·· admin</span>
+</footer>
+ 
+<!-- ORDER MODAL -->
+<div class="modal-overlay" id="order-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('order-modal')">✕</button>
+    <div class="modal-title" id="order-title"></div>
+    <div class="modal-sub">Заполни данные — оплата через Platega.io</div>
+    <div class="modal-price" id="order-price"></div>
+ 
+    <div class="form-group"><label>Brawl Stars тег</label><input type="text" id="order-tag" placeholder="#XXXXXXXX"></div>
+    <div class="form-group"><label>Email для чека</label><input type="email" id="order-email" placeholder="you@example.com"></div>
+ 
+    <!-- Platega notice -->
+    <div style="background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:.82rem;color:var(--sub);line-height:1.6">
+      💳 Оплата обрабатывается через <strong style="color:var(--gem)">Platega.io</strong> — СБП, карта, USDT. После нажатия кнопки тебя перенаправит на страницу оплаты.
+    </div>
+ 
+    <button class="btn btn-gem" style="width:100%;margin-top:4px" onclick="placeOrder()">
+      Перейти к оплате →
+    </button>
+  </div>
+</div>
+ 
+<!-- TOAST -->
+<div id="toast">✅ Готово!</div>
+ 
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+let currentUser = JSON.parse(localStorage.getItem('bg_user') || 'null');
+let orders = JSON.parse(localStorage.getItem('bg_orders') || '[]');
+let reviews = JSON.parse(localStorage.getItem('bg_reviews') || JSON.stringify([
+  {name:'Artemix', product:'170 гемов', stars:5, text:'Получил гемы через 10 минут! Всё чётко, без проблем. Буду покупать ещё 🔥', date:'12 апр'},
+  {name:'KiraBS', product:'БП+', stars:5, text:'Лучший магаз для BS. Поддержка ответила быстро, гемы пришли сразу.', date:'18 апр'},
+  {name:'Shady__', product:'360 гемов', stars:4, text:'Всё хорошо, но ждал чуть дольше обычного — 40 мин. Но зато честно и без обмана', date:'21 апр'},
+  {name:'Pro_Brawler', product:'950 гемов', stars:5, text:'Топ! Уже третий раз беру тут. Рекомендую всем кто ищет где купить гемы', date:'25 апр'},
+]));
+let selectedStar = 0;
+let orderItem = {name:'', price:''};
+ 
+// ── RENDER REVIEWS ────────────────────────────────────────────────────────────
+function renderReviews() {
+  const container = document.getElementById('reviews-list');
+  container.innerHTML = '';
+  reviews.slice().reverse().forEach((r, i) => {
+    const initials = r.name.slice(0,1).toUpperCase();
+    const div = document.createElement('div');
+    div.className = 'review-card';
+    div.style.animationDelay = (i * 0.07) + 's';
+    div.innerHTML = `
+      <div class="review-header">
+        <div class="review-avatar" style="background:linear-gradient(135deg,${avatarColor(r.name)})">
+          ${initials}
+        </div>
+        <div>
+          <div class="review-name">${esc(r.name)}</div>
+          <div class="review-date">${r.date}</div>
+        </div>
+      </div>
+      <div class="review-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+      <div class="review-text">${esc(r.text)}</div>
+      <span class="review-product">${esc(r.product)}</span>`;
+    container.appendChild(div);
+  });
+}
+ 
+function avatarColor(name) {
+  const colors = [
+    '#7b2fff, #00d4ff','#ff6b35, #ff2d55','#00c853, #007e33',
+    '#ff8c00, #cc5500','#e91e63, #7b2fff','#00bcd4, #7b2fff'
+  ];
+  let h = 0; for(let c of name) h += c.charCodeAt(0);
+  return colors[h % colors.length];
+}
+ 
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+ 
+// ── STARS ─────────────────────────────────────────────────────────────────────
+function setStar(n) {
+  selectedStar = n;
+  document.querySelectorAll('.star-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i < n);
+  });
+}
+ 
+// ── REVIEW SUBMIT ─────────────────────────────────────────────────────────────
+async function submitReview() {
+  const name = document.getElementById('rv-name').value.trim();
+  const product = document.getElementById('rv-product').value;
+  const text = document.getElementById('rv-text').value.trim();
+ 
+  if(!name || !text || selectedStar === 0) { showToast('⚠️ Заполни все поля и выбери оценку'); return; }
+ 
+  const review = {
+    name, product, stars: selectedStar, text,
+    date: new Date().toLocaleDateString('ru', {day:'numeric', month:'short'}),
+    _rid: 'r' + Date.now()
+  };
+ 
+  reviews.push(review);
+  localStorage.setItem('bg_reviews', JSON.stringify(reviews));
+ 
+  // Send to "channel" - simulated: send to Telegram bot webhook or store as review channel entry
+  // For demo we simulate with a Claude API call that formats the review nicely
+  try {
+    await sendReviewToChannel(review);
+  } catch(e) {}
+ 
+  document.getElementById('rv-name').value = '';
+  document.getElementById('rv-text').value = '';
+  setStar(0);
+  renderReviews();
+  showToast('✅ Отзыв опубликован! Спасибо 🙏');
+}
+ 
+async function sendReviewToChannel(review) {
+  // Simulate "channel" storage — in production this would POST to Telegram bot / Discord webhook / backend
+  let channel = JSON.parse(localStorage.getItem('bg_review_channel') || '[]');
+  channel.push({ ...review, receivedAt: new Date().toISOString() });
+  localStorage.setItem('bg_review_channel', JSON.stringify(channel));
+}
+ 
+// ── PLATEGA CONFIG ────────────────────────────────────────────────────────────
+// ⚙️ Вставь свой Merchant ID из личного кабинета Platega.io
+const PLATEGA_MERCHANT_ID = 'YOUR_MERCHANT_ID';
+// ⚙️ Вставь свой секретный ключ (используется для подписи на бэкенде)
+// НЕ храни секретный ключ в клиентском коде в продакшене!
+// Для демо — генерим ссылку на pay.platega.io напрямую.
+const PLATEGA_BASE = 'https://pay.platega.io';
+ 
+// Генерация платёжной ссылки Platega
+function buildPlategaUrl(orderId, amount, description, email) {
+  const params = new URLSearchParams({
+    merchant_id: PLATEGA_MERCHANT_ID,
+    order_id:    orderId,
+    amount:      amount,           // сумма в рублях
+    currency:    'RUB',
+    description: description,
+    email:       email || '',
+    success_url: window.location.href + '?status=success&order=' + orderId,
+    fail_url:    window.location.href + '?status=fail&order=' + orderId,
+  });
+  return PLATEGA_BASE + '/pay?' + params.toString();
+}
+ 
+// ── ORDER MODAL ───────────────────────────────────────────────────────────────
+function openOrder(name, price) {
+  orderItem = {name, price};
+  document.getElementById('order-title').textContent = '💎 ' + name;
+  document.getElementById('order-price').textContent = Number(price).toLocaleString('ru') + ' ₽';
+  if(currentUser) document.getElementById('order-tag').value = currentUser.tag || '';
+  if(currentUser) document.getElementById('order-email').value = currentUser.email || '';
+  openModal('order-modal');
+}
+ 
+function placeOrder() {
+  const tag   = document.getElementById('order-tag').value.trim();
+  const email = document.getElementById('order-email').value.trim();
+  if(!tag)   { showToast('⚠️ Укажи Brawl Stars тег'); return; }
+  if(!email) { showToast('⚠️ Укажи email для чека'); return; }
+ 
+  const orderId = 'IM' + Date.now().toString().slice(-8);
+  const order = {
+    id: orderId,
+    name: orderItem.name,
+    price: orderItem.price,
+    tag, email,
+    status: 'pending',
+    date: new Date().toLocaleDateString('ru', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'})
+  };
+  orders.push(order);
+  localStorage.setItem('bg_orders', JSON.stringify(orders));
+  closeModal('order-modal');
+ 
+  // Если Merchant ID настроен — редиректим на Platega
+  if(PLATEGA_MERCHANT_ID && PLATEGA_MERCHANT_ID !== 'YOUR_MERCHANT_ID') {
+    const payUrl = buildPlategaUrl(
+      orderId,
+      orderItem.price,
+      'IceMortis Shop: ' + orderItem.name + ' (тег: ' + tag + ')',
+      email
+    );
+    showToast('🔀 Переходим на страницу оплаты Platega...');
+    setTimeout(() => { window.open(payUrl, '_blank'); }, 800);
+  } else {
+    // Демо-режим: показываем как будет выглядеть ссылка
+    const demoUrl = buildPlategaUrl(orderId, orderItem.price, 'IceMortis Shop: ' + orderItem.name, email);
+    showToast('✅ Заказ #' + orderId + ' создан! Вставь Merchant ID в PLATEGA_MERCHANT_ID для живых платежей.');
+    console.log('📎 Platega URL (демо):', demoUrl);
+  }
+ 
+  if(currentUser) renderOrders();
+  // Проверяем статус при возврате со страницы оплаты
+  checkReturnStatus();
+}
+ 
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  let users = JSON.parse(localStorage.getItem('bg_users') || '[]');
+  const user = users.find(u => u.email === email && u.pass === pass);
+  if(!user) { showToast('❌ Неверный email или пароль'); return; }
+  currentUser = user;
+  localStorage.setItem('bg_user', JSON.stringify(user));
+  showProfile();
+}
+ 
+function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const tag = document.getElementById('reg-tag').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  if(!name||!email||!pass) { showToast('⚠️ Заполни все поля'); return; }
+  let users = JSON.parse(localStorage.getItem('bg_users') || '[]');
+  if(users.find(u => u.email === email)) { showToast('❌ Email уже зарегистрирован'); return; }
+  const user = {name, email, tag, pass};
+  users.push(user);
+  localStorage.setItem('bg_users', JSON.stringify(users));
+  currentUser = user;
+  localStorage.setItem('bg_user', JSON.stringify(user));
+  showProfile();
+  showToast('🎉 Аккаунт создан!');
+}
+ 
+function doLogout() {
+  currentUser = null;
+  localStorage.removeItem('bg_user');
+  document.getElementById('profile-block').style.display = 'none';
+  document.getElementById('auth-block').style.display = 'block';
+  showLogin();
+}
+ 
+function showLogin() {
+  document.getElementById('login-form').style.display = 'block';
+  document.getElementById('reg-form').style.display = 'none';
+}
+ 
+function showReg() {
+  document.getElementById('login-form').style.display = 'none';
+  document.getElementById('reg-form').style.display = 'block';
+}
+ 
+function showProfile() {
+  document.getElementById('auth-block').style.display = 'none';
+  document.getElementById('profile-block').style.display = 'block';
+  document.getElementById('profile-name-text').textContent = currentUser.name;
+  document.getElementById('profile-email-text').textContent = currentUser.email;
+  document.getElementById('profile-tag-text').textContent = currentUser.tag ? ('🏷️ ' + currentUser.tag) : '🏷️ Тег не указан';
+  document.getElementById('profile-av').textContent = currentUser.name.slice(0,1).toUpperCase();
+  document.getElementById('set-name').value = currentUser.name;
+  document.getElementById('set-tag').value = currentUser.tag || '';
+  renderOrders();
+}
+ 
+function saveSettings() {
+  const name = document.getElementById('set-name').value.trim();
+  const tag = document.getElementById('set-tag').value.trim();
+  if(!name) { showToast('⚠️ Имя не может быть пустым'); return; }
+  currentUser.name = name; currentUser.tag = tag;
+  localStorage.setItem('bg_user', JSON.stringify(currentUser));
+  let users = JSON.parse(localStorage.getItem('bg_users') || '[]');
+  const idx = users.findIndex(u => u.email === currentUser.email);
+  if(idx > -1) { users[idx] = currentUser; localStorage.setItem('bg_users', JSON.stringify(users)); }
+  showToast('✅ Настройки сохранены');
+  showProfile();
+}
+ 
+// ── ORDERS ────────────────────────────────────────────────────────────────────
+function renderOrders() {
+  const myOrders = orders.filter(o => currentUser && o.email === currentUser.email);
+  const container = document.getElementById('order-list');
+  if(!myOrders.length) {
+    container.innerHTML = '<div style="color:var(--sub);padding:20px;text-align:center">Заказов пока нет 😔</div>';
+    return;
+  }
+  container.innerHTML = myOrders.slice().reverse().map(o => `
+    <div class="order-item">
+      <div class="order-icon">💎</div>
+      <div class="order-info">
+        <div class="order-name">${esc(o.name)} · #${o.id}</div>
+        <div class="order-date">${o.date} · ${Number(o.price).toLocaleString('ru')} ₽</div>
+      </div>
+      <div class="order-status ${o.status==='done'?'status-done':'status-pending'}">
+        ${o.status==='done' ? '✅ Выдан' : '⏳ В обработке'}
+      </div>
+    </div>`).join('');
+}
+ 
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+ 
+// ── CABINET TOGGLE ────────────────────────────────────────────────────────────
+function toggleCabinet() {
+  const cab = document.getElementById('cabinet');
+  cab.classList.toggle('visible');
+  if(cab.classList.contains('visible')) {
+    cab.scrollIntoView({behavior:'smooth'});
+    if(currentUser) showProfile();
+  }
+}
+ 
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.getElementById('order-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal('order-modal'); });
+ 
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+ 
+// ── NAV SCROLL ────────────────────────────────────────────────────────────────
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+ 
+// ── PLATEGA RETURN STATUS ─────────────────────────────────────────────────────
+function checkReturnStatus() {
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('status');
+  const orderId = params.get('order');
+  if(status === 'success' && orderId) {
+    // Помечаем заказ как выполненный
+    const idx = orders.findIndex(o => o.id === orderId);
+    if(idx > -1) { orders[idx].status = 'done'; localStorage.setItem('bg_orders', JSON.stringify(orders)); }
+    showToast('🎉 Оплата прошла успешно! Заказ #' + orderId + ' принят');
+    if(currentUser) renderOrders();
+    // Убираем параметры из URL
+    window.history.replaceState({}, '', window.location.pathname);
+  } else if(status === 'fail') {
+    showToast('❌ Оплата не прошла. Попробуй снова или напиши в поддержку');
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+}
+ 
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderReviews();
+checkReturnStatus();
+if(currentUser) { /* pre-auth ready */ }
+ 
+// ── ADMIN CREDENTIALS (default, хранятся в localStorage) ─────────────────────
+// Логин: IceMortis | Пароль: Frost@2025!
+// ── ADMIN CREDENTIALS ────────────────────────────────────────────────────────
+const ADMIN_LOGIN = 'Vlas2114yar21@gmail.com';
+const ADMIN_PASS  = 'Yh9pdnKH2he7@PyM';
+ 
+function getAdminCreds() {
+  return { login: ADMIN_LOGIN, pass: ADMIN_PASS };
+}
+ 
+let adminLoggedIn = false;
+ 
+function openAdminLogin() {
+  document.getElementById('admin-login-input').value = '';
+  document.getElementById('admin-pass-input').value  = '';
+  document.getElementById('admin-login-err').style.display = 'none';
+  openModal('admin-login-modal');
+}
+ 
+function adminLogin() {
+  const login = document.getElementById('admin-login-input').value.trim();
+  const pass  = document.getElementById('admin-pass-input').value;
+  const err   = document.getElementById('admin-login-err');
+  if(login === ADMIN_LOGIN && pass === ADMIN_PASS) {
+    adminLoggedIn = true;
+    closeModal('admin-login-modal');
+    document.getElementById('admin-panel').style.display = 'block';
+    setTimeout(() => document.getElementById('admin-panel').scrollIntoView({behavior:'smooth'}), 100);
+    adminRenderAll();
+  } else {
+    err.style.display = 'block';
+    document.getElementById('admin-pass-input').value = '';
+  }
+}
+ 
+function adminLogout() {
+  adminLoggedIn = false;
+  document.getElementById('admin-panel').style.display = 'none';
+}
+ 
+function adminChangePass() {
+  showToast('ℹ️ Смена пароля: обратитесь к разработчику сайта');
+}
+ 
+// ── ADMIN TAB ─────────────────────────────────────────────────────────────────
+function adminTab(name, btn) {
+  document.querySelectorAll('#admin-panel .tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.admin-tab-content').forEach(t => t.style.display = 'none');
+  btn.classList.add('active');
+  document.getElementById('admin-tab-' + name).style.display = 'block';
+}
+ 
+// ── ADMIN RENDER ALL ──────────────────────────────────────────────────────────
+function adminRenderAll() {
+  adminRenderStats();
+  adminRenderOrders();
+  adminRenderReviews();
+  adminRenderUsers();
+}
+ 
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function adminRenderStats() {
+  const total   = orders.length;
+  const pending = orders.filter(o => o.status === 'pending').length;
+  const done    = orders.filter(o => o.status === 'done').length;
+  const paid    = orders.filter(o => o.status === 'paid').length;
+  const revenue = orders.filter(o => ['done','paid'].includes(o.status)).reduce((s,o) => s + Number(o.price), 0);
+  const el = document.getElementById('admin-stats');
+  el.innerHTML = [
+    ['📦', total, 'Всего заказов'],
+    ['⏳', pending, 'В обработке'],
+    ['💳', paid, 'Оплачено'],
+    ['✅', done, 'Выдано'],
+    ['💰', revenue.toLocaleString('ru') + ' ₽', 'Выручка'],
+    ['⭐', reviews.length, 'Отзывов'],
+  ].map(([ico,num,lbl]) => `
+    <div class="astat-card">
+      <div style="font-size:1.6rem;margin-bottom:6px">${ico}</div>
+      <div class="astat-num">${num}</div>
+      <div class="astat-label">${lbl}</div>
+    </div>`).join('');
+}
+ 
+// ── ORDERS ────────────────────────────────────────────────────────────────────
+const STATUS_MAP = {
+  pending:   {label:'⏳ В обработке', cls:'status-pending'},
+  paid:      {label:'💳 Оплачен',     cls:'status-paid'},
+  done:      {label:'✅ Выдан',       cls:'status-done'},
+  cancelled: {label:'❌ Отменён',     cls:'status-cancelled'},
+};
+ 
+function adminRenderOrders() {
+  var searchEl = document.getElementById('admin-search');
+  var filterEl = document.getElementById('admin-filter');
+  var q = searchEl ? searchEl.value.toLowerCase() : '';
+  var fil = filterEl ? filterEl.value : 'all';
+  var list = orders.slice().reverse();
+  if (fil !== 'all') list = list.filter(function(o) { return o.status === fil; });
+  if (q) list = list.filter(function(o) {
+    return (o.tag||'').toLowerCase().indexOf(q) > -1 ||
+           (o.email||'').toLowerCase().indexOf(q) > -1 ||
+           (o.id||'').toLowerCase().indexOf(q) > -1 ||
+           (o.name||'').toLowerCase().indexOf(q) > -1;
+  });
+  var container = document.getElementById('admin-orders-list');
+  if (!list.length) {
+    container.innerHTML = '<div style="color:var(--sub);padding:20px;text-align:center">Заказов не найдено</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < list.length; i++) {
+    var o = list[i];
+    var s = STATUS_MAP[o.status] || STATUS_MAP.pending;
+    html += '<div class="admin-order-card">';
+    html += '<div style="font-size:1.6rem">💎</div>';
+    html += '<div style="flex:1;min-width:180px">';
+    html += '<div style="font-weight:800;font-size:.95rem">' + esc(o.name) + '</div>';
+    html += '<div style="font-size:.78rem;color:var(--sub);margin-top:2px">#' + esc(o.id) + ' · ' + esc(o.date) + '</div>';
+    html += '<div style="font-size:.8rem;color:var(--sub);margin-top:2px">🏷️ ' + esc(o.tag) + ' · ✉️ ' + esc(o.email) + '</div>';
+    html += '</div>';
+    html += '<div style="font-weight:900;font-size:1.05rem;color:var(--gem)">' + Number(o.price).toLocaleString('ru') + ' ₽</div>';
+    html += '<div class="order-status ' + s.cls + '" style="white-space:nowrap">' + s.label + '</div>';
+    html += '<select class="status-select" data-orderid="' + o.id + '" onchange="adminSetStatus(this.dataset.orderid, this.value)">';
+    html += '<option value="">— Изменить —</option>';
+    html += '<option value="pending">⏳ В обработке</option>';
+    html += '<option value="paid">💳 Оплачен</option>';
+    html += '<option value="done">✅ Выдан</option>';
+    html += '<option value="cancelled">❌ Отменён</option>';
+    html += '</select>';
+    html += '<button data-orderid="' + o.id + '" onclick="adminDeleteOrder(this.dataset.orderid)" style="background:rgba(255,68,102,.12);border:1px solid rgba(255,68,102,.25);color:#ff4466;font-size:.8rem;font-weight:800;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap">🗑️ Удалить</button>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+ 
+ 
+function adminSetStatus(orderId, newStatus) {
+  if(!newStatus) return;
+  const idx = orders.findIndex(o => o.id === orderId);
+  if(idx > -1) {
+    orders[idx].status = newStatus;
+    localStorage.setItem('bg_orders', JSON.stringify(orders));
+    adminRenderAll();
+    showToast('✅ Статус заказа #' + orderId + ' обновлён');
+    // Обновляем и в личном кабинете клиента если открыт
+    if(currentUser) renderOrders();
+  }
+}
+ 
+function adminDeleteOrder(orderId) {
+  if(!confirm('Удалить заказ #' + orderId + '?')) return;
+  orders = orders.filter(o => o.id !== orderId);
+  localStorage.setItem('bg_orders', JSON.stringify(orders));
+  adminRenderAll();
+  showToast('🗑️ Заказ удалён');
+}
+ 
+// ── REVIEWS ───────────────────────────────────────────────────────────────────
+function adminRenderReviews() {
+  var container = document.getElementById('admin-reviews-list');
+  if (!reviews.length) {
+    container.innerHTML = '<div style="color:var(--sub);padding:20px;text-align:center">Отзывов нет</div>';
+    return;
+  }
+  reviews.forEach(function(r, i) { if (!r._rid) r._rid = 'r' + i + '_' + Date.now(); });
+  localStorage.setItem('bg_reviews', JSON.stringify(reviews));
+  var html = '';
+  var rev = reviews.slice().reverse();
+  for (var i = 0; i < rev.length; i++) {
+    var r = rev[i];
+    var stars = '';
+    for (var s = 0; s < r.stars; s++) stars += '★';
+    html += '<div class="admin-order-card" style="align-items:flex-start">';
+    html += '<div style="flex:1">';
+    html += '<div style="font-weight:800">' + esc(r.name) + ' <span style="color:var(--gold)">' + stars + '</span></div>';
+    html += '<div style="font-size:.78rem;color:var(--sub);margin-top:2px">' + esc(r.product) + ' · ' + esc(r.date) + '</div>';
+    html += '<div style="font-size:.87rem;color:var(--sub);margin-top:8px;line-height:1.5">' + esc(r.text) + '</div>';
+    html += '</div>';
+    html += '<button data-rid="' + r._rid + '" onclick="adminDeleteReview(this.dataset.rid)" style="margin-left:12px;background:rgba(255,68,102,.12);border:1px solid rgba(255,68,102,.25);color:#ff4466;font-size:.8rem;font-weight:800;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;flex-shrink:0">🗑️ Удалить</button>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+ 
+function adminDeleteReview(rid) {
+  if (!confirm('Удалить этот отзыв?')) return;
+  reviews = reviews.filter(function(r) { return r._rid !== rid; });
+  localStorage.setItem('bg_reviews', JSON.stringify(reviews));
+  renderReviews();
+  adminRenderAll();
+  showToast('🗑️ Отзыв удалён');
+}
+ 
+ 
+function adminClearOrders() {
+  if (!confirm('Удалить все заказы?')) return;
+  orders = [];
+  localStorage.setItem('bg_orders', '[]');
+  adminRenderAll();
+  showToast('🗑️ Заказы удалены');
+}
+ 
+function adminClearReviews() {
+  if (!confirm('Удалить все отзывы?')) return;
+  reviews = [];
+  localStorage.setItem('bg_reviews', '[]');
+  renderReviews();
+  adminRenderAll();
+  showToast('🗑️ Отзывы удалены');
+}
+ 
+function adminRenderUsers() {
+  const users = JSON.parse(localStorage.getItem('bg_users') || '[]');
+  const container = document.getElementById('admin-users-list');
+  if(!users.length) {
+    container.innerHTML = '<div style="color:var(--sub);padding:20px;text-align:center">Зарегистрированных пользователей нет</div>';
+    return;
+  }
+  container.innerHTML = users.map(u => {
+    const userOrders = orders.filter(o => o.email === u.email);
+    const spent = userOrders.filter(o => ['done','paid'].includes(o.status)).reduce((s,o) => s + Number(o.price), 0);
+    return `<div class="admin-order-card">
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gem2),var(--gem));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;flex-shrink:0">${u.name.slice(0,1).toUpperCase()}</div>
+      <div style="flex:1">
+        <div style="font-weight:800">${esc(u.name)}</div>
+        <div style="font-size:.78rem;color:var(--sub);margin-top:2px">✉️ ${esc(u.email)} · 🏷️ ${u.tag ? esc(u.tag) : 'нет тега'}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:.82rem;font-weight:800;color:var(--gem)">${userOrders.length} заказов</div>
+        <div style="font-size:.78rem;color:var(--sub)">${spent.toLocaleString('ru')} ₽ потрачено</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+ 
+// Закрытие admin modal по клику снаружи
+document.getElementById('admin-login-modal').addEventListener('click', e => {
+  if(e.target===e.currentTarget) closeModal('admin-login-modal');
+});
+</script>
+</body>
+</html>
